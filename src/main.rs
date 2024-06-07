@@ -7,8 +7,8 @@ async fn main() {
     dotenv().ok();
 
     env_logger::Builder::new()
-    .filter_level(LevelFilter::Info)  // Set the minimum log level to display
-    .init();
+        .filter_level(LevelFilter::Info) // Set the minimum log level to display
+        .init();
 
     info!("Starting server...");
 
