@@ -1,7 +1,8 @@
 # Montinger Server
 
-![Static Badge](https://img.shields.io/badge/1.78.0-%23000000.svg?style=for-the-badge&logo=rust&logoColor=white&label=Rust&labelColor=%23000000&color=gray)
-![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)
+![Rust](https://img.shields.io/badge/1.78.0-%23000000.svg?style=for-the-badge&logo=rust&logoColor=%23000000&label=Rust&labelColor=gray&color=%23000000)
+![MongoDB](https://img.shields.io/badge/7.0.8-%2347A248.svg?style=for-the-badge&logo=mongodb&logoColor=%2347A248&label=MONGODB&labelColor=gray&color=%2347A248)
+![.ENV](https://img.shields.io/badge/.env-%23ECD53F.svg?style=for-the-badge&logo=dotenv&logoColor=%23ECD53F&color=gray)
 
 ## Configurations
 
