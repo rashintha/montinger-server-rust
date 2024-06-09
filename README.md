@@ -1,6 +1,6 @@
 # Montinger Server
 
-![Rust](https://img.shields.io/badge/rust-%23000000.svg?style=for-the-badge&logo=rust&logoColor=white)
+![Static Badge](https://img.shields.io/badge/1.78.0-%23000000.svg?style=for-the-badge&logo=rust&logoColor=white&label=Rust&labelColor=%23000000&color=gray)
 ![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)
 
 ## Configurations
