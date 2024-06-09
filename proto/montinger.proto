@@ -1,0 +1,15 @@
+syntax = "proto3";
+package montinger;
+
+service Montinger {
+  rpc Register (RegisterRequest) returns (RegisterResponse) {}
+}
+
+message RegisterRequest {
+  string secret = 1;
+  string mac = 2;
+}
+
+message RegisterResponse {
+  string token = 1;
+}

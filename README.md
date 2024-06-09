@@ -14,4 +14,7 @@ Create a `.env` file in the root directory with the following details.
   DB_PASS=    # DB Password
   DB_PORT=    # DB Port
   DB=         # Database
+
+  # gRPC configurations
+  GRPC_PORT=50051
 ```
