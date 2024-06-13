@@ -6,14 +6,22 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+serde = { version = "1.0.203", features = ["derive"] }
+argon2 = "0.5.3"
+axum = "0.7.5"
+bson = "2.11.0"
 dotenv = "0.15.0"
 env_logger = "0.11.3"
+jsonwebtoken = "9.3.0"
 log = "0.4.21"
 mongodb = "2.8.2"
 once_cell = "1.19.0"
 prost = "0.12.6"
 tokio = { version = "1", features = ["full"] }
 tonic = "0.11.0"
+tower-http = {version="0.5.2", features=["trace"]}
+tracing-subscriber = "0.3.18"
+tracing = "0.1.40"
 
 [build-dependencies]
 tonic-build = "0.11.0"

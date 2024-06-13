@@ -18,4 +18,7 @@ Create a `.env` file in the root directory with the following details.
 
   # gRPC configurations
   GRPC_PORT=50051
+
+  # REST configurations
+  REST_PORT=3000
 ```

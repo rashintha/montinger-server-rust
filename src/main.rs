@@ -1,19 +1,22 @@
+use tokio::join;
+
 use dotenv::dotenv;
-use log::{info, LevelFilter};
-use montinger_server::{db, grpc};
+use log::info;
+use montinger_server::{api, db, grpc};
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>>  {
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
     dotenv().ok();
 
-    env_logger::Builder::new()
-        .filter_level(LevelFilter::Info) // Set the minimum log level to display
+    tracing_subscriber::fmt()
+        .with_target(false)
+        .compact()
         .init();
 
     info!("Initializing...");
 
     let _ = db::get_client().await;
-    grpc::start_server().await?;
+    let _ = join!(grpc::start_server(), api::initialize());
 
     Ok(())
 }
