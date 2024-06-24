@@ -2,7 +2,7 @@ use log::info;
 use tonic::{transport::Server, Request, Response, Status};
 
 use montinger::montinger_server::{Montinger, MontingerServer};
-use montinger::{RegisterResponse, RegisterRequest};
+use montinger::{RegisterRequest, RegisterResponse};
 
 use crate::config;
 
@@ -30,18 +30,18 @@ impl Montinger for MontingerService {
 }
 
 pub async fn start_server() -> Result<(), Box<dyn std::error::Error>> {
-  let grpc_port = config::get_env_string("GRPC_PORT").expect("GRPC_PORT is missing.");
+    let grpc_port = config::get_env_string("GRPC_PORT").expect("GRPC_PORT is missing.");
 
-  let addr = format!("[::1]:{}", grpc_port).parse()?;
+    let addr = format!("[::1]:{}", grpc_port).parse()?;
 
-  info!("Starting gRPC server on [::1]:{}...", grpc_port);
+    info!("Starting gRPC server on [::1]:{}...", grpc_port);
 
-  let greeter = MontingerService::default();
+    let greeter = MontingerService::default();
 
-  Server::builder()
-      .add_service(MontingerServer::new(greeter))
-      .serve(addr)
-      .await?;
+    Server::builder()
+        .add_service(MontingerServer::new(greeter))
+        .serve(addr)
+        .await?;
 
-  Ok(())
+    Ok(())
 }

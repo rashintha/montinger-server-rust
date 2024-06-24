@@ -16,7 +16,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     info!("Initializing...");
 
     let _ = db::get_client().await;
-    let _ = join!(grpc::start_server(), api::initialize());
+    let (rocket_result, _) = join!(grpc::start_server(), api::initialize());
+
+    rocket_result?;
 
     Ok(())
 }

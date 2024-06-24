@@ -17,11 +17,13 @@ pub async fn get_client() -> mongodb::error::Result<Arc<Mutex<Client>>> {
             let db_pass = config::get_env_string("DB_PASS").expect("DB_PASS is missing.");
             let db_host = config::get_env_string("DB_HOST").expect("DB_HOST is missing.");
             let db_port = config::get_env_string("DB_PORT").expect("DB_PORT is missing.");
+            let database = config::get_env_string("DB").expect("DB is missing.");
 
             let connection_string = format!(
-                "mongodb+srv://{}:{}@{}:{}",
-                db_user, db_pass, db_host, db_port
+                "mongodb://{}:{}@{}:{}/?authSource={}",
+                db_user, db_pass, db_host, db_port, database
             );
+
             let options = ClientOptions::parse(connection_string).await?;
             let client = Client::with_options(options)?;
             Ok::<_, mongodb::error::Error>(Arc::new(Mutex::new(client)))

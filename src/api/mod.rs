@@ -1,25 +1,30 @@
 pub mod auth;
 
-use crate::config;
+use crate::{config, db};
+use auth::auth_controller;
 use log::info;
-use tower_http::trace::{self, TraceLayer};
-use tracing::Level;
+use rocket::routes;
+use rocket_cors::CorsOptions;
 
 pub async fn initialize() -> Result<(), Box<dyn std::error::Error>> {
     let rest_port = config::get_env_string("REST_PORT").expect("REST_PORT is missing.");
 
     info!("Initializing REST API on [::1]:{}...", rest_port);
 
-    let app = axum::Router::new().nest("/auth", auth::router()).layer(
-        TraceLayer::new_for_http()
-            .make_span_with(trace::DefaultMakeSpan::new().level(Level::INFO))
-            .on_response(trace::DefaultOnResponse::new().level(Level::INFO)),
-    );
+    let cors = CorsOptions::default().to_cors().unwrap();
+    let config = rocket::Config {
+        port: rest_port.parse().unwrap(),
+        address: "::1".parse().unwrap(),
+        log_level: rocket::config::LogLevel::Normal,
+        ..Default::default()
+    };
 
-    let listener = tokio::net::TcpListener::bind(format!("[::1]:{}", rest_port)).await?;
-    axum::serve(listener, app.into_make_service())
-        .await
-        .unwrap();
+    rocket::custom(config)
+        .mount("/", routes![auth_controller::login])
+        .manage(db::get_client().await)
+        .attach(cors)
+        .launch()
+        .await?;
 
     Ok(())
 }

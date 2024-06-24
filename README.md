@@ -12,7 +12,7 @@ Create a `.env` file in the root directory with the following details.
   # MongoDB configurations
   DB_HOST=    # DB Host IP or similar
   DB_USER=    # DB User
-  DB_PASS=    # DB Password
+  DB_PASS=    # DB Password (Make sure this is URL Encoded)
   DB_PORT=    # DB Port
   DB=         # Database
 
@@ -21,4 +21,7 @@ Create a `.env` file in the root directory with the following details.
 
   # REST configurations
   REST_PORT=3000
+
+  # JWT configurations
+  JWT_SECRET=
 ```
