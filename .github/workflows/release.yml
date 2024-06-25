@@ -46,6 +46,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: target/release/montinger-server  # Replace with your binary name
+          asset_path: target/x86_64-unknown-linux-gnu/release/montinger-server  # Replace with your binary name
           asset_name: montinger-server # Update this if different
           asset_content_type: application/octet-stream
