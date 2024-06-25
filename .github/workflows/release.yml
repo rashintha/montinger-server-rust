@@ -17,6 +17,9 @@ jobs:
           toolchain: stable
           profile: minimal
           override: true
+      
+      - name: Install Protoc
+        uses: arduino/setup-protoc@v2
 
       - name: Build Release
         uses: actions-rs/cargo@v1
