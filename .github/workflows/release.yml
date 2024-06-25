@@ -9,7 +9,7 @@ jobs:
   build_and_release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Install Rust
         uses: actions-rs/toolchain@v1
@@ -19,10 +19,12 @@ jobs:
           override: true
       
       - name: Install Protoc
-        uses: arduino/setup-protoc@v2
+        uses: arduino/setup-protoc@v3
 
       - name: Build Release
         uses: actions-rs/cargo@v1
+        env:
+          PROTOC: /usr/local/bin/protoc
         with:
           command: build
           args: --release
