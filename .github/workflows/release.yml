@@ -23,8 +23,6 @@ jobs:
 
       - name: Build Release
         uses: actions-rs/cargo@v1
-        env:
-          PROTOC: /usr/local/bin/protoc
         with:
           command: build
           args: --release
