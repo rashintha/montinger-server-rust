@@ -9,6 +9,8 @@
 Create a `.env` file in the root directory with the following details.
 
 ```conf
+  ENV=production
+  
   # MongoDB configurations
   DB_HOST=    # DB Host IP or similar
   DB_USER=    # DB User
@@ -24,4 +26,6 @@ Create a `.env` file in the root directory with the following details.
 
   # JWT configurations
   JWT_SECRET=
+  ACCESS_EXPIRES_IN=    # time in minutes
+  REFRESH_EXPIRES_IN=   # time in minutes
 ```

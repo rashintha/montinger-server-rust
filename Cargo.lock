@@ -1312,7 +1312,7 @@ dependencies = [
 
 [[package]]
 name = "montinger-server"
-version = "0.1.0"
+version = "0.1.8"
 dependencies = [
  "argon2",
  "async-trait",
