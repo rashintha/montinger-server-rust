@@ -28,22 +28,38 @@ pub async fn login(credentials: LoginUser) -> Result<Json<TokenResponse>, Montin
             return Err(MontingerError::Unauthorized);
         }
 
-        let claims = Claims {
+        let access_exp_time = config::get_env_i64("ACCESS_EXPIRES_IN").expect("ACCESS_EXPIRES_IN is invalid.");
+        let refresh_exp_time = config::get_env_i64("REFRESH_EXPIRES_IN").expect("REFRESH_EXPIRES_IN is invalid.");
+
+        let claim_access = Claims {
             sub: user.email.clone(),
-            exp: (chrono::Utc::now() + chrono::Duration::hours(24)).timestamp(),
+            exp: (chrono::Utc::now() + chrono::Duration::minutes(access_exp_time)).timestamp(),
         };
 
-        let db_user = config::get_env_string("JWT_SECRET").expect("DB_USER is missing.");
+        let claim_refresh = Claims {
+            sub: user.email.clone(),
+            exp: (chrono::Utc::now() + chrono::Duration::minutes(refresh_exp_time)).timestamp(),
+        };
 
-        let token = encode(
+        let jwt_secret = config::get_env_string("JWT_SECRET").expect("DB_USER is missing.");
+
+        let token_access = encode(
             &Header::default(),
-            &claims,
-            &EncodingKey::from_secret(db_user.as_ref()),
+            &claim_access,
+            &EncodingKey::from_secret(jwt_secret.as_ref()),
+        )
+        .map_err(|_| MontingerError::InternalServerError)?;
+
+        let token_refresh = encode(
+            &Header::default(),
+            &claim_refresh,
+            &EncodingKey::from_secret(jwt_secret.as_ref()),
         )
         .map_err(|_| MontingerError::InternalServerError)?;
 
         return Ok(Json(TokenResponse {
-            access_token: token,
+            access_token: token_access,
+            refresh_token: token_refresh,
         }));
     }
     Err(MontingerError::Unauthorized)

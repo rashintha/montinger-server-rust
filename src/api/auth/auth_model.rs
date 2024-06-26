@@ -19,11 +19,12 @@ pub struct User {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct TokenResponse {
     pub access_token: String,
+    pub refresh_token: String,
 }
 
 impl TokenResponse {
-    pub fn new(access_token: String) -> Self {
-        Self { access_token }
+    pub fn new(access_token: String, refresh_token: String) -> Self {
+        Self { access_token, refresh_token }
     }
 }
 
