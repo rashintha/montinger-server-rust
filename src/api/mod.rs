@@ -1,6 +1,6 @@
 pub mod auth;
 
-use crate::{config, db};
+use crate::{config, db, middleware::LoggingMiddleware};
 use auth::auth_controller;
 use log::info;
 use rocket::routes;
@@ -23,6 +23,7 @@ pub async fn initialize() -> Result<(), Box<dyn std::error::Error>> {
         .mount("/", routes![auth_controller::login])
         .manage(db::get_client().await)
         .attach(cors)
+        .attach(LoggingMiddleware)
         .launch()
         .await?;
 
