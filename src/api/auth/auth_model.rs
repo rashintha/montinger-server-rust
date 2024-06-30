@@ -1,5 +1,4 @@
 use bson::oid::ObjectId;
-use jsonwebtoken::{DecodingKey, EncodingKey};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Serialize, Deserialize)]
@@ -34,16 +33,7 @@ pub struct Claims {
     pub exp: i64,
 }
 
-pub struct Keys {
-    pub encoding: EncodingKey,
-    decoding: DecodingKey,
-}
-
-impl Keys {
-    pub fn new(secret: &[u8]) -> Self {
-        Self {
-            encoding: EncodingKey::from_secret(secret),
-            decoding: DecodingKey::from_secret(secret),
-        }
-    }
+#[derive(Deserialize)]
+pub struct RefreshRequest {
+    pub refresh_token: String,
 }

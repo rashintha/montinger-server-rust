@@ -1,9 +1,7 @@
 use std::time::SystemTime;
 
 use rocket::{
-    data,
     fairing::{Fairing, Info, Kind},
-    response::status,
     Data, Request, Response,
 };
 use serde::{Deserialize, Serialize};
@@ -66,10 +64,10 @@ impl Fairing for LoggingMiddleware {
         };
 
         if response.status().code >= 400 {
-          log_entry.errors = match response.body_mut().to_string().await.ok() {
-              Some(errors) => serde_json::from_str(&errors.as_str()).ok(),
-              None => None,
-          };
+            log_entry.errors = match response.body_mut().to_string().await.ok() {
+                Some(errors) => serde_json::from_str(&errors.as_str()).ok(),
+                None => None,
+            };
         } else {
             log_entry.data = match response.body_mut().to_string().await.ok() {
                 Some(data) => serde_json::from_str(&data.as_str()).ok(),
