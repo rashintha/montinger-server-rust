@@ -1,12 +1,14 @@
 use argon2::{Argon2, PasswordHash, PasswordVerifier};
-use jsonwebtoken::{encode, EncodingKey, Header};
 use rocket::serde::json::Json;
 
-use crate::config;
+use crate::{
+    config,
+    util::util_jwt::{decode_jwt, encode_jwt},
+};
 
 use super::{
     auth_enum::MontingerError,
-    auth_model::{Claims, LoginUser, TokenResponse},
+    auth_model::{Claims, LoginUser, RefreshRequest, TokenResponse},
     auth_repository,
 };
 
@@ -28,8 +30,10 @@ pub async fn login(credentials: LoginUser) -> Result<Json<TokenResponse>, Montin
             return Err(MontingerError::Unauthorized);
         }
 
-        let access_exp_time = config::get_env_i64("ACCESS_EXPIRES_IN").expect("ACCESS_EXPIRES_IN is invalid.");
-        let refresh_exp_time = config::get_env_i64("REFRESH_EXPIRES_IN").expect("REFRESH_EXPIRES_IN is invalid.");
+        let access_exp_time =
+            config::get_env_i64("ACCESS_EXPIRES_IN").expect("ACCESS_EXPIRES_IN is invalid.");
+        let refresh_exp_time =
+            config::get_env_i64("REFRESH_EXPIRES_IN").expect("REFRESH_EXPIRES_IN is invalid.");
 
         let claim_access = Claims {
             sub: user.email.clone(),
@@ -41,21 +45,9 @@ pub async fn login(credentials: LoginUser) -> Result<Json<TokenResponse>, Montin
             exp: (chrono::Utc::now() + chrono::Duration::minutes(refresh_exp_time)).timestamp(),
         };
 
-        let jwt_secret = config::get_env_string("JWT_SECRET").expect("DB_USER is missing.");
+        let token_access = encode_jwt(&claim_access)?;
 
-        let token_access = encode(
-            &Header::default(),
-            &claim_access,
-            &EncodingKey::from_secret(jwt_secret.as_ref()),
-        )
-        .map_err(|_| MontingerError::InternalServerError)?;
-
-        let token_refresh = encode(
-            &Header::default(),
-            &claim_refresh,
-            &EncodingKey::from_secret(jwt_secret.as_ref()),
-        )
-        .map_err(|_| MontingerError::InternalServerError)?;
+        let token_refresh = encode_jwt(&claim_refresh)?;
 
         return Ok(Json(TokenResponse {
             access_token: token_access,
@@ -63,4 +55,38 @@ pub async fn login(credentials: LoginUser) -> Result<Json<TokenResponse>, Montin
         }));
     }
     Err(MontingerError::Unauthorized)
+}
+
+pub async fn refresh(
+    refresh_request: RefreshRequest,
+) -> Result<Json<TokenResponse>, MontingerError> {
+    let claims = decode_jwt(refresh_request.refresh_token.as_str())?;
+
+    let access_exp_time =
+        config::get_env_i64("ACCESS_EXPIRES_IN").expect("ACCESS_EXPIRES_IN is invalid.");
+    let refresh_exp_time =
+        config::get_env_i64("REFRESH_EXPIRES_IN").expect("REFRESH_EXPIRES_IN is invalid.");
+
+    if claims.exp < chrono::Utc::now().timestamp() {
+        return Err(MontingerError::Unauthorized);
+    }
+
+    let claim_access = Claims {
+        sub: claims.sub.clone(),
+        exp: (chrono::Utc::now() + chrono::Duration::minutes(access_exp_time)).timestamp(),
+    };
+
+    let claim_refresh = Claims {
+        sub: claims.sub.clone(),
+        exp: (chrono::Utc::now() + chrono::Duration::minutes(refresh_exp_time)).timestamp(),
+    };
+
+    let token_access = encode_jwt(&claim_access)?;
+
+    let token_refresh = encode_jwt(&claim_refresh)?;
+
+    Ok(Json(TokenResponse {
+        access_token: token_access,
+        refresh_token: token_refresh,
+    }))
 }

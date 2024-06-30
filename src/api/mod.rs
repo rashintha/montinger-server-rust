@@ -20,7 +20,10 @@ pub async fn initialize() -> Result<(), Box<dyn std::error::Error>> {
     };
 
     rocket::custom(config)
-        .mount("/", routes![auth_controller::login])
+        .mount(
+            "/",
+            routes![auth_controller::login, auth_controller::refresh],
+        )
         .manage(db::get_client().await)
         .attach(cors)
         .attach(LoggingMiddleware)
