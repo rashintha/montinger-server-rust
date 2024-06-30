@@ -25,7 +25,8 @@ Create a `.env` file in the root directory with the following details.
   REST_PORT=3000
 
   # JWT configurations
-  JWT_SECRET=
+  JWT_ACCESS_SECRET=
+  JWT_REFRESH_SECRET=
   ACCESS_EXPIRES_IN=    # time in minutes
   REFRESH_EXPIRES_IN=   # time in minutes
 ```

@@ -3,7 +3,7 @@ use rocket::serde::json::Json;
 
 use crate::{
     config,
-    util::util_jwt::{decode_jwt, encode_jwt},
+    util::util_jwt::{decode_refresh_jwt, encode_access_jwt, encode_refresh_jwt},
 };
 
 use super::{
@@ -45,9 +45,8 @@ pub async fn login(credentials: LoginUser) -> Result<Json<TokenResponse>, Montin
             exp: (chrono::Utc::now() + chrono::Duration::minutes(refresh_exp_time)).timestamp(),
         };
 
-        let token_access = encode_jwt(&claim_access)?;
-
-        let token_refresh = encode_jwt(&claim_refresh)?;
+        let token_access = encode_access_jwt(&claim_access)?;
+        let token_refresh = encode_refresh_jwt(&claim_refresh)?;
 
         return Ok(Json(TokenResponse {
             access_token: token_access,
@@ -60,7 +59,7 @@ pub async fn login(credentials: LoginUser) -> Result<Json<TokenResponse>, Montin
 pub async fn refresh(
     refresh_request: RefreshRequest,
 ) -> Result<Json<TokenResponse>, MontingerError> {
-    let claims = decode_jwt(refresh_request.refresh_token.as_str())?;
+    let claims = decode_refresh_jwt(refresh_request.refresh_token.as_str())?;
 
     let access_exp_time =
         config::get_env_i64("ACCESS_EXPIRES_IN").expect("ACCESS_EXPIRES_IN is invalid.");
@@ -81,9 +80,8 @@ pub async fn refresh(
         exp: (chrono::Utc::now() + chrono::Duration::minutes(refresh_exp_time)).timestamp(),
     };
 
-    let token_access = encode_jwt(&claim_access)?;
-
-    let token_refresh = encode_jwt(&claim_refresh)?;
+    let token_access = encode_access_jwt(&claim_access)?;
+    let token_refresh = encode_refresh_jwt(&claim_refresh)?;
 
     Ok(Json(TokenResponse {
         access_token: token_access,
