@@ -23,7 +23,10 @@ pub struct TokenResponse {
 
 impl TokenResponse {
     pub fn new(access_token: String, refresh_token: String) -> Self {
-        Self { access_token, refresh_token }
+        Self {
+            access_token,
+            refresh_token,
+        }
     }
 }
 

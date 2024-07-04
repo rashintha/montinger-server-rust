@@ -6,12 +6,14 @@ use crate::{
 };
 
 pub fn encode_access_jwt(claims: &Claims) -> Result<String, MontingerError> {
-    let jwt_secret = config::get_env_string("JWT_ACCESS_SECRET").expect("JWT_ACCESS_SECRET is missing.");
+    let jwt_secret =
+        config::get_env_string("JWT_ACCESS_SECRET").expect("JWT_ACCESS_SECRET is missing.");
     encode_jwt(claims, jwt_secret.as_str())
 }
 
 pub fn encode_refresh_jwt(claims: &Claims) -> Result<String, MontingerError> {
-    let jwt_secret = config::get_env_string("JWT_REFRESH_SECRET").expect("JWT_REFRESH_SECRET is missing.");
+    let jwt_secret =
+        config::get_env_string("JWT_REFRESH_SECRET").expect("JWT_REFRESH_SECRET is missing.");
     encode_jwt(claims, jwt_secret.as_str())
 }
 
@@ -25,12 +27,14 @@ fn encode_jwt(claims: &Claims, jwt_secret: &str) -> Result<String, MontingerErro
 }
 
 pub fn decode_access_jwt(token: &str) -> Result<Claims, MontingerError> {
-    let jwt_secret = config::get_env_string("JWT_ACCESS_SECRET").expect("JWT_ACCESS_SECRET is missing.");
+    let jwt_secret =
+        config::get_env_string("JWT_ACCESS_SECRET").expect("JWT_ACCESS_SECRET is missing.");
     decode_jwt(token, jwt_secret.as_str())
 }
 
 pub fn decode_refresh_jwt(token: &str) -> Result<Claims, MontingerError> {
-    let jwt_secret = config::get_env_string("JWT_REFRESH_SECRET").expect("JWT_REFRESH_SECRET is missing.");
+    let jwt_secret =
+        config::get_env_string("JWT_REFRESH_SECRET").expect("JWT_REFRESH_SECRET is missing.");
     decode_jwt(token, jwt_secret.as_str())
 }
 

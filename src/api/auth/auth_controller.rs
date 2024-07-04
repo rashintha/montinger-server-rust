@@ -1,4 +1,4 @@
-use rocket::{post, get, serde::json::Json};
+use rocket::{get, post, serde::json::Json};
 
 use super::{
     auth_enum::MontingerError,
@@ -12,7 +12,9 @@ pub async fn login(credentials: Json<LoginUser>) -> Result<Json<TokenResponse>, 
 }
 
 #[post("/auth/refresh", data = "<refresh_request>")]
-pub async fn refresh(refresh_request: Json<RefreshRequest>) -> Result<Json<TokenResponse>, MontingerError> {
+pub async fn refresh(
+    refresh_request: Json<RefreshRequest>,
+) -> Result<Json<TokenResponse>, MontingerError> {
     auth_service::refresh(refresh_request.into_inner()).await
 }
 

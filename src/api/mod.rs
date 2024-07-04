@@ -1,6 +1,9 @@
 pub mod auth;
 
-use crate::{config, db, middleware::{jwt_auth_middleware::JWTAuthFairing, logging_middleware::LoggingMiddleware}};
+use crate::{
+    config, db,
+    middleware::{jwt_auth_middleware::JWTAuthFairing, logging_middleware::LoggingMiddleware},
+};
 use auth::auth_controller;
 use log::info;
 use rocket::routes;
