@@ -1,10 +1,12 @@
 pub mod auth;
+pub mod monitors;
 
 use crate::{
     config, db,
     middleware::{jwt_auth_middleware::JWTAuthFairing, logging_middleware::LoggingMiddleware},
 };
 use auth::auth_controller;
+use monitors::monitors_controller;
 use log::info;
 use rocket::routes;
 use rocket_cors::CorsOptions;
@@ -29,7 +31,8 @@ pub async fn initialize() -> Result<(), Box<dyn std::error::Error>> {
                 auth_controller::login,
                 auth_controller::refresh,
                 auth_controller::unauthorized_error,
-                auth_controller::auth_check
+                auth_controller::auth_check,
+                monitors_controller::get_all
             ],
         )
         .manage(db::get_client().await)
