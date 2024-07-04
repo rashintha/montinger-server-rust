@@ -18,8 +18,6 @@ impl Fairing for JWTAuthFairing {
     }
 
     async fn on_request(&self, request: &mut Request<'_>, _data: &mut Data<'_>) {
-        println!("JWTAuthFairing");
-
         if request.uri().path() == "/auth/login" || request.uri().path() == "/auth/refresh" {
             return; // Skip auth for login route
         }
@@ -28,7 +26,6 @@ impl Fairing for JWTAuthFairing {
         let auth_header = request.headers().get_one("Authorization");
 
         if let Some(auth_header) = auth_header {
-            println!("auth_header: {}", auth_header);
             let claims_result = decode_access_jwt(auth_header.trim_start_matches("Bearer "));
 
             match claims_result {
