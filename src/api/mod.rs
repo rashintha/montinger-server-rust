@@ -6,8 +6,8 @@ use crate::{
     middleware::{jwt_auth_middleware::JWTAuthFairing, logging_middleware::LoggingMiddleware},
 };
 use auth::auth_controller;
-use monitors::monitors_controller;
 use log::info;
+use monitors::monitors_controller;
 use rocket::routes;
 use rocket_cors::CorsOptions;
 
